@@ -33,18 +33,18 @@ export const profileConfig: ProfileConfig = {
 			url: "https://v.124365.xyz",
 			showName: false,
 		},
+                                {
+			name: "Email",
+			icon: "fa7-solid:envelope",
+			url: "https://mail.124365.xyz",
+			showName: false,
+		},
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
 			url: "https://github.com/E5-lab",
 			showName: false,
-		},
-		{
-			name: "Email",
-			icon: "fa7-solid:envelope",
-			url: "mailto:admin@124365.xyz",
-			showName: false,
-		},
+		},	
 		{
 			name: "RSS",
 			icon: "fa7-solid:rss",
