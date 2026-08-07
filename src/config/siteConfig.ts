@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "分享生活点滴~~",
 
 	// 站点 URL
-	site_url: "https://blog.124365.xyz",
+	site_url: "https://blog.zalymx.com",
 
 	// 站点描述
 	description:
@@ -81,7 +81,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "蓝宇梦欣",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -218,7 +218,7 @@ export const siteConfig: SiteConfig = {
 		// Bilibili 配置
 		bilibili: {
 			// 你的 Bilibili 用户 UID
-			uid: "38932988",
+			uid: "11325670",
 		},
 		// TMDB 配置（可选，需要翻墙）
 		// tmdb: {
