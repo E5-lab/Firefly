@@ -26,9 +26,9 @@ const pages = resolvePageToggles({
 	// 书签导航页面开关
 	booknav: true,
 	// 哔哩哔哩追番页面开关
-	bilibili: false,
+	bilibili: true,
 	// 番组计划页面开关
-	bangumi: false,
+	bangumi: true,
 	// VNDB页面开关
 	vndb: false,
 	// MyAnimeList页面开关
@@ -267,13 +267,13 @@ export const siteConfig: SiteConfig = {
 	// ── Bilibili配置 ──────────────────────────────────
 	bilibili: {
 		// 你的 Bilibili 用户 UID
-		uid: "",
+		uid: "11325670",
 	},
 
 	// ── 番组计划bangumi配置 ──────────────────────────────────
 	bangumi: {
 		// Bangumi用户ID
-		userId: "",
+		userId: "1172648",
 		// 数据模式：static=构建时获取，dynamic=客户端实时获取
 		// static 模式在构建时获取数据并静态渲染，部署后数据不更新
 		// dynamic 模式在浏览器中实时请求 API，始终显示最新数据
