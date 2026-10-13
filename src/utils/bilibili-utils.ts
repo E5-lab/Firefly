@@ -16,18 +16,46 @@ export interface BilibiliItem {
 const BILIBILI_API = "https://api.bilibili.com/x/space/bangumi/follow/list";
 const PAGE_SIZE = 30;
 
-/** 获取指定类型的全部追番数据 */
+// 构建机（尤其是海外机房）访问 B 站接口可能长时间无响应，
+// 旧实现没有任何超时控制，会把整次静态构建一起拖到超时失败。
+// 这里给每个请求加硬超时，并在任何异常时降级为空数据，保证构建永远不受影响。
+const REQUEST_TIMEOUT_MS = 10000;
+
+/** 带超时、永不抛错、永不挂起的 JSON 请求；失败时返回 null */
+async function fetchJsonSafe(url: string): Promise<any | null> {
+	const controller = new AbortController();
+	const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+	try {
+		const res = await fetch(url, { signal: controller.signal });
+		if (!res.ok) {
+			console.warn(`[Bilibili] HTTP ${res.status} for ${url}`);
+			return null;
+		}
+		return await res.json();
+	} catch (error) {
+		console.warn(
+			`[Bilibili] Request failed (${url}): ${(error as Error)?.message ?? error}`,
+		);
+		return null;
+	} finally {
+		clearTimeout(timer);
+	}
+}
+
+/** 获取指定类型的全部追番数据（任何失败都返回空数组，不影响构建） */
 async function fetchBilibiliByType(
 	uid: string,
 	type: number,
 ): Promise<BilibiliItem[]> {
 	const items: BilibiliItem[] = [];
+
 	// 第一页，获取 total
-	const firstRes = await fetch(
+	const firstJson = await fetchJsonSafe(
 		`${BILIBILI_API}?type=${type}&vmid=${uid}&pn=1&ps=${PAGE_SIZE}`,
 	);
-	const firstJson = await firstRes.json();
-	if (firstJson.code !== 0 || !firstJson.data?.list?.length) return items;
+	if (!firstJson || firstJson.code !== 0 || !firstJson.data?.list?.length) {
+		return items;
+	}
 
 	items.push(...firstJson.data.list);
 	const total = firstJson.data.total || items.length;
@@ -38,11 +66,9 @@ async function fetchBilibiliByType(
 		const promises: Promise<BilibiliItem[]>[] = [];
 		for (let pn = 2; pn <= totalPages; pn++) {
 			promises.push(
-				fetch(
+				fetchJsonSafe(
 					`${BILIBILI_API}?type=${type}&vmid=${uid}&pn=${pn}&ps=${PAGE_SIZE}`,
-				)
-					.then((r) => r.json())
-					.then((j) => j.data?.list || []),
+				).then((j) => j?.data?.list || []),
 			);
 		}
 		const remaining = await Promise.all(promises);
